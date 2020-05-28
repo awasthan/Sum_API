@@ -6,8 +6,8 @@ node () {
 
  wrap([$class: 'Xvfb']) {
 	stage ('Sum_API - Checkout') {
-// 	 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.ibm.com/anand-awasthi/Sum_API.git']]])
-	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${JOB_NAME}'], [$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.ibm.com/anand-awasthi/Sum_API.git']]])
+// 	 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.com/awasthan/Sum_API.git']]])
+	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${JOB_NAME}'], [$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.com/awasthan/Sum_API.git']]])
 }
 	stage ('Sum_API - Build') {
 //sh label: '', script: '''#!/bin/bash

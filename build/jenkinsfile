@@ -1,0 +1,38 @@
+// @Author: Anand Awasthi (anand.awasthi@in.ibm.com)
+
+timestamps {
+
+node () {
+
+ wrap([$class: 'Xvfb']) {
+	stage ('Sum_API - Checkout') {
+// 	 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.ibm.com/anand-awasthi/Sum_API.git']]])
+	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '${JOB_NAME}'], [$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-token', url: 'https://github.ibm.com/anand-awasthi/Sum_API.git']]])
+}
+	stage ('Sum_API - Build') {
+//sh label: '', script: '''#!/bin/bash
+//source /opt/IBM/ace-11.0.0.8/server/bin/mqsiprofile
+//mqsicreatebar -data . -b ${JOB_NAME}.bar -a ${JOB_NAME}
+//mqsiapplybaroverride -b ${JOB_NAME}.bar -p ${JOB_NAME}/properties/DEV.properties -o ${JOB_NAME}_DEV_${BUILD_NUMBER}.bar -r
+//mqsiapplybaroverride -b ${JOB_NAME}.bar -p ${JOB_NAME}/properties/QA.properties -o ${JOB_NAME}_QA_${BUILD_NUMBER}.bar -r
+//zip ${JOB_NAME}.zip ${JOB_NAME}_DEV_${BUILD_NUMBER}.bar ${JOB_NAME}_QA_${BUILD_NUMBER}.bar '''
+//nexusArtifactUploader artifacts: [[artifactId: '$JOB_NAME', classifier: '', file: 'Sum_Service.zip', type: 'zip']], credentialsId: 'admin-nexus', groupId: 'com.ibm.esb', nexusUrl: '127.0.0.1:8444/nexus', nexusVersion: 'nexus3', protocol: 'https', repository: 'releases', version: '$BUILD_NUMBER'
+withMaven(
+ maven: 'maven',
+ mavenSettingsConfig: 'afb42767-7657-4aee-a3d2-08f83a568a05') {
+
+      // Run the maven build
+      //sh "mvn -f ${JOB_NAME}/pom.xml clean package"
+      //sh "mvn -f ${JOB_NAME}/pom.xml -B deploy"
+     // sh "mvn -f ${JOB_NAME}/pom.xml -B release:prepare"
+      sh "mvn -f ${JOB_NAME}/pom.xml -B release:prepare release:perform"
+            
+}
+//sshagent (credentials: ['jenkins-token']) {
+//    sh("git tag -a ${JOB_NAME}_${BUILD_NUMBER} -m 'Tagged by Jenkins build'")
+//    sh('git push git@github.ibm.com:anand-awasthi/Sum_Service.git --tags')
+}
+}
+cleanWs()
+}
+}
